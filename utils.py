@@ -26,15 +26,15 @@ def background_gradient(s, m, M, cmap='PuBu', low=0, high=0):
     return ['background-color: %s' % color if not np.isnan(normed[i]) else 'background-color: #fff;color: #fff' for i, color in enumerate(c)]
 
 
-def show_heatmap(df):
+def show_heatmap(df, cmap='PuOr_r'):
     return df.style.apply(background_gradient,
-                          cmap='PuOr',
+                          cmap=cmap,
                           m=df.min().min(),
                           M=df.max().max(),
                           low=0,
                           high=0.2)
 
-def plot_embedding(X, labels, means=None, means_labels=None, clusters=None, three_d=False):
+def plot_embedding(X, labels, means=None, means_labels=None, clusters=None, title=None, three_d=False):
 
     markers = ["o","x","s","v", "*", "^",">","<","8","p","D"]
 
@@ -68,7 +68,7 @@ def plot_embedding(X, labels, means=None, means_labels=None, clusters=None, thre
         if clusters is not None:
             for cluster in set(clusters):
                 mask = clusters == cluster
-                ax.scatter(X[mask, 0], X[mask, 1], marker=markers[cluster], c=colors[mask], label=labels[mask], cmap=plt.get_cmap("tab20"))
+                ax.scatter(X[mask, 0], X[mask, 1], marker=markers[cluster], s=100, c=colors[mask], label=labels[mask], cmap=plt.get_cmap("tab20"))
         else:
             ax.scatter(X[:, 0], X[:, 1], marker="o", c=colors[:], label=labels[:], cmap=plt.get_cmap("tab20"))
 
@@ -80,11 +80,13 @@ def plot_embedding(X, labels, means=None, means_labels=None, clusters=None, thre
 
     ax.set_xlabel('1st component')
     ax.set_ylabel('2nd component')
+    if title is not None:
+        ax.set_title(title)
 
     if means is not None:
         ax.legend(handles, means_labels, loc=1, prop=fontP)
 
-def plot_compare_embeddings(X, Y, labels, three_d=False):
+def plot_compare_embeddings(X, Y, labels, title=None, three_d=False):
 
     plt.figure()
     labels = np.array(labels) # needed for masking with plotting with clusters
@@ -126,6 +128,8 @@ def plot_compare_embeddings(X, Y, labels, three_d=False):
 
     ax.legend(handles, labels, loc='best', prop=fontP)
     ax.set_title("O: skel (skeletons), X: fullscene (full scene)")
+    if title is not None:
+        ax.set_title(title)
 
 
 import itertools
