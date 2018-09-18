@@ -26,11 +26,11 @@ def background_gradient(s, m, M, cmap='PuBu', low=0, high=0):
     return ['background-color: %s' % color if not np.isnan(normed[i]) else 'background-color: #fff;color: #fff' for i, color in enumerate(c)]
 
 
-def show_heatmap(df, cmap='PuOr_r'):
+def show_heatmap(df, m=None, M=None, cmap='PuOr_r'):
     return df.style.apply(background_gradient,
                           cmap=cmap,
-                          m=df.min().min(),
-                          M=df.max().max(),
+                          m=df.min().min() if m is None else m,
+                          M=df.max().max() if M is None else M,
                           low=0,
                           high=0.2)
 
@@ -52,9 +52,9 @@ def plot_embedding(X, labels, means=None, means_labels=None, clusters=None, titl
         if clusters is not None:
             for cluster in set(clusters):
                 mask = clusters == cluster
-                ax.scatter(X[mask, 0], X[mask, 1], X[mask,2], marker=markers[cluster], c=colors[mask], label=labels[mask], cmap=plt.get_cmap("tab20"))
+                ax.scatter(X[mask, 0], X[mask, 1], X[mask,2],s=200, marker=markers[cluster], c=colors[mask], label=labels[mask], cmap=plt.get_cmap("tab20"))
         else:
-            ax.scatter(X[:, 0], X[:, 1], X[:,2], marker="o", c=colors, label=labels, cmap=plt.get_cmap("tab20"))
+            ax.scatter(X[:, 0], X[:, 1], X[:,2], marker="o",s=200, c=colors, label=labels, cmap=plt.get_cmap("tab20"))
 
         ax.set_zlabel('3rd component')
 
